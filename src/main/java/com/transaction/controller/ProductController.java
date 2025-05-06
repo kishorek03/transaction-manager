@@ -1,39 +1,50 @@
 package com.transaction.controller;
 
-
-import com.transaction.entity.Product;
-import com.transaction.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.transaction.dto.ApiResponse;
+import com.transaction.dto.ProductDTO;
+import com.transaction.service.ProductService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/products")
+@RequiredArgsConstructor
 public class ProductController {
 
-    @Autowired
-    private ProductRepository productRepository;
-
-    @GetMapping
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
-    }
+    private final ProductService productService;
 
     @PostMapping
-    public Product createProduct(@RequestBody Product product) {
-        return productRepository.save(product);
+    public ResponseEntity<ApiResponse<ProductDTO>> create(@RequestBody ProductDTO dto) {
+        log.info("Creating new product: {}", dto.name());
+        ProductDTO responseDto = productService.createProduct(dto);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>("success", "Product created", responseDto));
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<ProductDTO>>> getAll() {
+        log.info("Fetching all products");
+        List<ProductDTO> productDTOs = productService.findAll();
+        return ResponseEntity.ok(new ApiResponse<>("success", "Products retrieved", productDTOs));
     }
 
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
-        Product product = productRepository.findById(id).orElseThrow();
-        product.setName(productDetails.getName());
-        return productRepository.save(product);
+    public ResponseEntity<ApiResponse<ProductDTO>> update(@PathVariable Long id, @RequestBody ProductDTO dto) {
+        log.info("Updating product with ID: {}", id);
+        ProductDTO updated = productService.update(id, dto);
+        return ResponseEntity.ok(new ApiResponse<>("success", "Product updated", updated));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable Long id) {
-        productRepository.deleteById(id);
+    public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable Long id) {
+        log.info("Deleting product with ID: {}", id);
+        productService.delete(id);
+        return ResponseEntity.ok(new ApiResponse<>("success", "Product deleted", null));
     }
 }

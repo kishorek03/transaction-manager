@@ -1,38 +1,59 @@
 package com.transaction.service;
 
+import com.transaction.dto.ProductDTO;
+import com.transaction.dto.mapper.ProductMapper;
+import com.transaction.entity.AddOn;
+import com.transaction.entity.Flavour;
 import com.transaction.entity.Product;
+import com.transaction.entity.Unit;
+import com.transaction.exception.BadRequestException;
+import com.transaction.repository.AddOnRepository;
+import com.transaction.repository.FlavourRepository;
 import com.transaction.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.transaction.repository.UnitRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductDTO> findAll() {
+        List<Product> products = productRepository.findAll();
+        return products.stream()
+                .map(productMapper::toDto)
+                .toList();
     }
 
-    public Optional<Product> getProductById(Long id) {
-        return productRepository.findById(id);
+    public ProductDTO createProduct(ProductDTO dto) {
+        Product product = productMapper.toEntity(dto);
+        Product saved = productRepository.save(product);
+        return productMapper.toDto(saved);
     }
 
-    public Product createProduct(Product product) {
-        return productRepository.save(product);
+    public ProductDTO update(Long id, ProductDTO dto) {
+        Product existing = productRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("Product not found with id " + id));
+
+        Product updatedProduct = productMapper.toEntity(dto);
+        updatedProduct.setId(existing.getId()); // Ensure the ID is preserved
+
+        Product saved = productRepository.save(updatedProduct);
+        return productMapper.toDto(saved);
     }
 
-    public Product updateProduct(Long id, Product productDetails) {
-        Product product = productRepository.findById(id).orElseThrow();
-        product.setName(productDetails.getName());
-        return productRepository.save(product);
-    }
-
-    public void deleteProduct(Long id) {
+    public void delete(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new BadRequestException("Product not found with id " + id);
+        }
         productRepository.deleteById(id);
     }
 }

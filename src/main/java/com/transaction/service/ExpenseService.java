@@ -32,7 +32,6 @@ public class ExpenseService {
         expense.setAmount(expenseDetails.getAmount());
         expense.setCategory(expenseDetails.getCategory());
         expense.setPaymentMethod(expenseDetails.getPaymentMethod());
-        expense.setDate(expenseDetails.getDate());
         return expenseRepository.save(expense);
     }
 
