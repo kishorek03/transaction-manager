@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -52,14 +54,12 @@ public class SaleService {
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
 
         BigDecimal productPrice = product.getUnitPrice();
-        BigDecimal flavourPrice = BigDecimal.ZERO;
+        BigDecimal flavourPrice = product.getFlavours().stream()
+                .filter(flavour -> flavour.getId().equals(salesDTO.flavourId()))
+                .findFirst()
+                .map(Flavour::getPrice)
+                .orElse(BigDecimal.ZERO);
 
-        // Add flavour price if there are any selected for the product
-        if (salesDTO.flavourId() != null) {
-            for (Flavour flavour : product.getFlavours()) {
-                flavourPrice.add(flavour.getPrice()); // Assuming flavour price is stored in Flavour entity
-            }
-        }
 
         // If it's a parcel, add the parcel-related cost (5 per unit)
         BigDecimal parcelPrice = salesDTO.parcel() ? product.getParcelPrice().multiply(salesDTO.quantity()) : BigDecimal.ZERO;
@@ -67,4 +67,8 @@ public class SaleService {
         // Calculate the total amount: (product price + flavour price + parcel price) * quantity
         return (productPrice.add(flavourPrice).add(parcelPrice)).multiply(salesDTO.quantity());
     }
+    public List<Sale> filterSales(LocalDateTime startDate, LocalDateTime endDate, Long productId, Long flavourId, Boolean parcel) {
+        return salesRepository.findByFilters(startDate, endDate, productId, flavourId, parcel);
+    }
+
 }
