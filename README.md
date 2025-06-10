@@ -101,7 +101,7 @@ This system enables organizations to:
 ```mermaid
 graph TB
     A[Client Applications]
-    B --> C[API Gateway]
+    A --> C[API Gateway]
     C --> D[Controller Layer]
     D --> E[Service Layer]
     E --> F[Repository Layer]
