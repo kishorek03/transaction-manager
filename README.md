@@ -40,7 +40,7 @@ A high-performance backend system for managing financial transactions, built wit
 ### Local Development
 1. Clone the repository:
    ``bash
-   git clone https://github.com/yourusername/transaction-manager.git
+   git clone https://github.com/kishorek03/transaction-manager.git
    cd transaction-manager
 📈 Best Practices
 ✔️ Separation of Concerns
