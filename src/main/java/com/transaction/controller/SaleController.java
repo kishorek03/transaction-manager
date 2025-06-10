@@ -2,15 +2,19 @@ package com.transaction.controller;
 
 import com.transaction.dto.ApiResponse;
 import com.transaction.dto.SaleDTO;
+import com.transaction.dto.mapper.SaleMapper;
 import com.transaction.entity.Sale;
 import com.transaction.service.SaleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -19,8 +23,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SaleController {
 
-    @Autowired
-    private SaleService salesService;
+    private final SaleService salesService;
+    private final SaleMapper saleMapper;
 
     @PostMapping
     public Sale create(@RequestBody Sale sale) {
@@ -57,4 +61,18 @@ public class SaleController {
 
         return ResponseEntity.ok(new ApiResponse<>("success", "Amount calculated", amount));
     }
+    @GetMapping("/fetch")
+    public List<SaleDTO> fetchSales(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+            @RequestParam(required = false) Long productId,
+            @RequestParam(required = false) Long flavourId,
+            @RequestParam(required = false) Boolean parcel
+    ) {
+        return salesService.filterSales(startDate, endDate, productId, flavourId, parcel)
+                .stream()
+                .map(saleMapper::toDto)
+                .toList();
+    }
+
 }

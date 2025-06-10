@@ -12,6 +12,9 @@ import java.util.List;
 
 // Product DTO
 public record ProductDTO(
+
+        Long id,
+
         @NotBlank(message = "Name cannot be empty")
         String name,
 

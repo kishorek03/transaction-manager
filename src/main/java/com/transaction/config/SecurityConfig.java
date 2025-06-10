@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/user").hasAuthority("ROLE_SUPERADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/user").hasAnyAuthority("ROLE_SUPERADMIN","ROLE_ADMIN")
                         // Sales and expense routes
                         .requestMatchers("/api/sales/**", "/api/expenses/**")
                         .hasAnyAuthority("ROLE_EMPLOYEE", "ROLE_ADMIN", "ROLE_SUPERADMIN")
@@ -49,15 +49,18 @@ public class SecurityConfig {
                         ).hasAnyAuthority("ROLE_EMPLOYEE", "ROLE_ADMIN", "ROLE_SUPERADMIN")
 
                         // Product, Category, Unit, AddOn, Flavour, and Unit routes - POST, PUT, DELETE for ADMIN+
+                        .requestMatchers(HttpMethod.POST, "/api/orders/**")
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPERADMIN", "ROLE_EMPLOYEE")
+
                         .requestMatchers(HttpMethod.POST,
                                 "/api/products/**",
-                                "/api/orders/**",
                                 "/api/payment-methods/**",
                                 "/api/categories/**",
                                 "/api/units/**",
                                 "/api/addons/**",
                                 "/api/flavours/**"
                         ).hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPERADMIN")
+
 
                         .requestMatchers(HttpMethod.PUT,
                                 "/api/products/**",
