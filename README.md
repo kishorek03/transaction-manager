@@ -4,7 +4,6 @@
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.1-green?logo=spring)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-orange?logo=mysql)
 ![Fly.io](https://img.shields.io/badge/Deployed_on-Fly.io-purple?logo=fly.io)
-![License](https://img.shields.io/badge/License-MIT-brightgreen)
 
 A high-performance backend system for managing financial transactions, built with modern Java technologies and deployed on cloud infrastructure.
 
@@ -51,6 +50,7 @@ A high-performance backend system for managing financial transactions, built wit
 ✔️ Cloud-native Design
 
 🤝 Contributing
+
 We welcome contributions! Please follow these steps:
 
 Fork the repository
@@ -64,6 +64,7 @@ Push to the branch (git push origin feature/AmazingFeature)
 Open a Pull Request
 
 📜 License
+
 Distributed under the MIT License. See LICENSE for more information.
 
 📬 Contact
