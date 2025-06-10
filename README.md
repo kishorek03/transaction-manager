@@ -2,8 +2,6 @@
 
 <div align="center">
 
-![Transaction Management System](https://via.placeholder.com/800x200/1a1a1a/ffffff?text=Transaction+Management+System)
-
 **A robust, scalable financial transaction management platform built with modern Java technologies**
 
 [![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/)
@@ -102,7 +100,7 @@ This system enables organizations to:
 
 ```mermaid
 graph TB
-    A[Client Applications] --> B[Load Balancer]
+    A[Client Applications]
     B --> C[API Gateway]
     C --> D[Controller Layer]
     D --> E[Service Layer]
@@ -278,77 +276,6 @@ spring.profiles.active=test
 - **Development**: `http://localhost:8080/api`
 - **Production**: `https://your-app.fly.dev/api`
 
-### 📚 Endpoints Overview
-
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| `GET` | `/health` | Health check | ❌ |
-| `POST` | `/transactions` | Create transaction | ✅ |
-| `GET` | `/transactions/{id}` | Get transaction | ✅ |
-| `GET` | `/transactions` | List transactions | ✅ |
-| `PUT` | `/transactions/{id}` | Update transaction | ✅ |
-| `DELETE` | `/transactions/{id}` | Delete transaction | ✅ |
-
-### 📝 Example Requests
-
-<details>
-<summary>Create Transaction</summary>
-
-```bash
-curl -X POST http://localhost:8080/api/transactions \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -d '{
-    "amount": 100.50,
-    "description": "Payment for services",
-    "fromAccountId": "acc123",
-    "toAccountId": "acc456",
-    "transactionType": "TRANSFER"
-  }'
-```
-
-</details>
-
-<details>
-<summary>Get Transaction</summary>
-
-```bash
-curl -X GET http://localhost:8080/api/transactions/txn123 \
-  -H "Authorization: Bearer YOUR_TOKEN"
-```
-
-</details>
-
----
-
-## 🧪 Testing
-
-### 🏃 Running Tests
-
-```bash
-# Run all tests
-mvn test
-
-# Run specific test class
-mvn test -Dtest=TransactionServiceTest
-
-# Run with coverage
-mvn test jacoco:report
-```
-
-### 📊 Test Coverage
-
-- **Unit Tests**: 85%+ coverage
-- **Integration Tests**: Core flows covered
-- **Performance Tests**: Load testing included
-
-### 🔍 Test Categories
-
-- **Unit Tests**: Service layer logic
-- **Integration Tests**: API endpoints
-- **Repository Tests**: Database operations
-- **Performance Tests**: Load and stress testing
-
 ---
 
 ## 🚀 Deployment
@@ -391,17 +318,6 @@ fly status
    ```
 
 ---
-
-## 📈 Performance
-
-### 🎯 Performance Metrics
-
-| Metric | Target | Current |
-|--------|--------|---------|
-| **Response Time** | < 200ms | 150ms avg |
-| **Throughput** | 1000 TPS | 1200 TPS |
-| **Uptime** | 99.9% | 99.95% |
-| **Memory Usage** | < 512MB | 400MB avg |
 
 ### 🚀 Optimization Features
 
