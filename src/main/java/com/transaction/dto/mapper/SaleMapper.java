@@ -18,6 +18,7 @@ public interface SaleMapper {
     @Mapping(source = "flavour.id", target = "flavourId")
     @Mapping(source = "addOn.id", target = "addOnId")
     @Mapping(source = "order.id", target = "orderId")
+    @Mapping(source = "createdAt", target = "createdAt")
     SaleDTO toDto(Sale entity);
 
     @Named("mapProduct")

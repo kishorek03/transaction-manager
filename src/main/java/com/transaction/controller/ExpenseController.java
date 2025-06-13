@@ -1,43 +1,49 @@
 package com.transaction.controller;
 
-import com.transaction.entity.Expense;
+import com.transaction.dto.ApiResponse;
+import com.transaction.dto.ExpenseDTO;
 import com.transaction.service.ExpenseService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/expenses")
+@RequiredArgsConstructor
 public class ExpenseController {
 
-    @Autowired
-    private ExpenseService expenseService;
+    private final ExpenseService expenseService;
 
     @PostMapping
-    public Expense create(@RequestBody Expense expense) {
-        return expenseService.save(expense);
+    public ResponseEntity<ApiResponse<ExpenseDTO>> createExpense(@RequestBody ExpenseDTO dto) {
+        try {
+            ExpenseDTO response = expenseService.createExpense(dto);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ApiResponse<>("success", "Expense created successfully", response, null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse<>("error", "Failed to create expense", null, e.getMessage()));
+        }
     }
-
     @GetMapping
-    public List<Expense> getAll() {
-        return expenseService.findAll();
+    public ResponseEntity<ApiResponse<List<ExpenseDTO>>> getAllExpenses(
+            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+        try {
+            List<ExpenseDTO> expenses = expenseService.getAllExpenses(start,end);
+            return ResponseEntity.ok(
+                    new ApiResponse<>("success", "Fetched all expenses", expenses, null)
+            );
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>("error", "Failed to fetch expenses", null, e.getMessage()));
+        }
     }
 
-    @GetMapping("/{id}")
-    public Expense getById(@PathVariable Long id) {
-        return expenseService.findById(id);
-    }
-
-    @PutMapping("/{id}")
-    public Expense update(@PathVariable Long id, @RequestBody Expense updatedExpense) {
-        return expenseService.update(id, updatedExpense);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        expenseService.delete(id);
-        return ResponseEntity.ok().build();
-    }
 }

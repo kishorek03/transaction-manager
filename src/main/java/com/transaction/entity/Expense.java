@@ -1,10 +1,8 @@
 package com.transaction.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "expense")
@@ -17,9 +15,13 @@ public class Expense extends BaseEntity {
     @Column(nullable = false)
     private String item;
 
-    private Double quantity;
+    private BigDecimal quantity;
 
-    private Double amount;
+    private BigDecimal amount;
+
+    @ManyToOne
+    @JoinColumn(name = "unit_id", nullable = false)
+    private Unit unit;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
@@ -28,6 +30,16 @@ public class Expense extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "payment_method_id", nullable = false)
     private PaymentMethod paymentMethod;
+
+    private String remarks;
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 
     public Long getId() {
         return id;
@@ -45,19 +57,19 @@ public class Expense extends BaseEntity {
         this.item = item;
     }
 
-    public Double getQuantity() {
+    public BigDecimal getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Double quantity) {
+    public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -75,5 +87,13 @@ public class Expense extends BaseEntity {
 
     public void setPaymentMethod(PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public Unit getUnit() {
+        return unit;
+    }
+
+    public void setUnit(Unit unit) {
+        this.unit = unit;
     }
 }
