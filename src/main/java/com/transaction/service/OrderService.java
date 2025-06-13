@@ -1,6 +1,7 @@
 package com.transaction.service;
 
 import com.transaction.dto.OrderDTO;
+import com.transaction.dto.OrderSummaryDTO;
 import com.transaction.dto.mapper.OrderMapper;
 import com.transaction.entity.Order;
 import com.transaction.repository.OrderRepository;
@@ -10,6 +11,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -46,5 +48,9 @@ public class OrderService {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found"));
         return orderMapper.toDTO(order);
+    }
+
+    public List<OrderSummaryDTO> getOrderSummariesBetween(LocalDateTime start, LocalDateTime end) {
+        return orderRepository.findOrderSummariesBetweenDates(start, end);
     }
 }

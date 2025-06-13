@@ -3,6 +3,7 @@ package com.transaction.dto;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public record SaleDTO(
         @NotNull(message = "Product ID cannot be null")
@@ -22,5 +23,7 @@ public record SaleDTO(
 
         @NotNull(message = "Parcel flag cannot be null") Boolean parcel,
 
-        Long orderId
+        Long orderId,
+
+        LocalDateTime createdAt
 ) {}
