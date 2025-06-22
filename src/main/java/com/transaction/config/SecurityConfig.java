@@ -47,7 +47,8 @@ public class SecurityConfig {
                                 "/api/categories/**",
                                 "/api/units/**",
                                 "/api/addons/**",
-                                "/api/flavours/**"
+                                "/api/flavours/**",
+                                "/api/payment-methods/**"
                         ).hasAnyAuthority("ROLE_EMPLOYEE", "ROLE_ADMIN", "ROLE_SUPERADMIN")
 
                         // Product, Category, Unit, AddOn, Flavour, and Unit routes - POST, PUT, DELETE for ADMIN+

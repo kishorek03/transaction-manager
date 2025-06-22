@@ -62,17 +62,21 @@ public class SaleController {
         return ResponseEntity.ok(new ApiResponse<>("success", "Amount calculated", amount));
     }
     @GetMapping("/fetch")
-    public List<SaleDTO> fetchSales(
+    public ResponseEntity<ApiResponse<List<SaleDTO>>> fetchSales(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
             @RequestParam(required = false) Long productId,
             @RequestParam(required = false) Long flavourId,
             @RequestParam(required = false) Boolean parcel
     ) {
-        return salesService.filterSales(startDate, endDate, productId, flavourId, parcel)
+        List<SaleDTO> sales = salesService.filterSales(startDate, endDate, productId, flavourId, parcel)
                 .stream()
                 .map(saleMapper::toDto)
                 .toList();
+
+        ApiResponse<List<SaleDTO>> response = new ApiResponse<>("success", "Sales fetched", sales);
+        return ResponseEntity.ok(response);
     }
+
 
 }

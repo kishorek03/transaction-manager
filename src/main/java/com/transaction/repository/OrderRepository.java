@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    @Query("SELECT new com.transaction.dto.OrderSummaryDTO(o.totalAmount, o.paymentMethod.name) " +
+    @Query("SELECT new com.transaction.dto.OrderSummaryDTO(o.id, o.totalAmount, o.paymentMethod.name) " +
             "FROM Order o WHERE o.createdAt BETWEEN :startDate AND :endDate")
     List<OrderSummaryDTO> findOrderSummariesBetweenDates(
             @Param("startDate") LocalDateTime startDate,

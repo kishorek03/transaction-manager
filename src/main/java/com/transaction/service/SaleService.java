@@ -61,11 +61,10 @@ public class SaleService {
                 .orElse(BigDecimal.ZERO);
 
 
-        // If it's a parcel, add the parcel-related cost (5 per unit)
         BigDecimal parcelPrice = salesDTO.parcel() ? product.getParcelPrice().multiply(salesDTO.quantity()) : BigDecimal.ZERO;
 
         // Calculate the total amount: (product price + flavour price + parcel price) * quantity
-        return (productPrice.add(flavourPrice).add(parcelPrice)).multiply(salesDTO.quantity());
+        return (productPrice.add(flavourPrice)).multiply(salesDTO.quantity()).add(parcelPrice);
     }
     public List<Sale> filterSales(LocalDateTime startDate, LocalDateTime endDate, Long productId, Long flavourId, Boolean parcel) {
         return salesRepository.findByFilters(startDate, endDate, productId, flavourId, parcel);
