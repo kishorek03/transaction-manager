@@ -13,12 +13,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Flyctl
-        run: |
-          curl -L https://fly.io/install.sh | sh
-          echo "${HOME}/.fly/bin" >> $GITHUB_PATH
+      - name: Set up Flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
 
-      - name: Deploy to Fly.io
+      - name: Deploy to Fly.io (Machines platform)
+        run: flyctl deploy --app transaction-manager
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-        run: flyctl deploy --app transaction-manager
