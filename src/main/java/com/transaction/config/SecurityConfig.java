@@ -34,7 +34,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/user").hasAnyAuthority("ROLE_SUPERADMIN", "ROLE_ADMIN")
 
-                        // ✅ NEW ENDPOINTS
+                        // ✅ NEW ENDPOINTS - for balance
                         .requestMatchers(HttpMethod.POST, "/api/cash-movements/**", "/api/daily-cash-balance/**", "/api/cash-balance/calculate")
                         .hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPERADMIN")
 
