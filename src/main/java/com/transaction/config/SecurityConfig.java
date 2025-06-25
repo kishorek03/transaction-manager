@@ -32,53 +32,45 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/user").hasAnyAuthority("ROLE_SUPERADMIN","ROLE_ADMIN")
-                        // Sales and expense routes
+                        .requestMatchers(HttpMethod.POST, "/api/user").hasAnyAuthority("ROLE_SUPERADMIN", "ROLE_ADMIN")
+
+                        // ✅ NEW ENDPOINTS
+                        .requestMatchers(HttpMethod.POST, "/api/cash-movements/**", "/api/daily-cash-balance/**", "/api/cash-balance/calculate")
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPERADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/api/cash-movements/**", "/api/daily-cash-balance/**")
+                        .hasAnyAuthority("ROLE_EMPLOYEE", "ROLE_ADMIN", "ROLE_SUPERADMIN")
+
+                        // ✅ EXISTING ENDPOINTS
                         .requestMatchers("/api/sales/**", "/api/expenses/**")
                         .hasAnyAuthority("ROLE_EMPLOYEE", "ROLE_ADMIN", "ROLE_SUPERADMIN")
 
-                        .requestMatchers(HttpMethod.GET, "/api/user").hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPERADMIN")
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/products/**",
-                                "/api/orders/**",
-                                "/api/items/**",
-                                "/api/expenses/**",
-                                "/api/categories/**",
-                                "/api/units/**",
-                                "/api/addons/**",
-                                "/api/flavours/**",
-                                "/api/payment-methods/**"
+                        .requestMatchers(HttpMethod.GET, "/api/user")
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPERADMIN")
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/products/**", "/api/orders/**", "/api/items/**",
+                                "/api/expenses/**", "/api/categories/**", "/api/units/**",
+                                "/api/addons/**", "/api/flavours/**", "/api/payment-methods/**"
                         ).hasAnyAuthority("ROLE_EMPLOYEE", "ROLE_ADMIN", "ROLE_SUPERADMIN")
 
-                        // Product, Category, Unit, AddOn, Flavour, and Unit routes - POST, PUT, DELETE for ADMIN+
                         .requestMatchers(HttpMethod.POST, "/api/orders/**")
-                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPERADMIN", "ROLE_EMPLOYEE")
+                        .hasAnyAuthority("ROLE_EMPLOYEE", "ROLE_ADMIN", "ROLE_SUPERADMIN")
 
                         .requestMatchers(HttpMethod.POST,
-                                "/api/products/**",
-                                "/api/payment-methods/**",
-                                "/api/categories/**",
-                                "/api/units/**",
-                                "/api/addons/**",
-                                "/api/flavours/**"
+                                "/api/products/**", "/api/payment-methods/**",
+                                "/api/categories/**", "/api/units/**",
+                                "/api/addons/**", "/api/flavours/**"
                         ).hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPERADMIN")
 
-
                         .requestMatchers(HttpMethod.PUT,
-                                "/api/products/**",
-                                "/api/categories/**",
-                                "/api/units/**",
-                                "/api/addons/**",
-                                "/api/flavours/**"
+                                "/api/products/**", "/api/categories/**",
+                                "/api/units/**", "/api/addons/**", "/api/flavours/**"
                         ).hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPERADMIN")
 
                         .requestMatchers(HttpMethod.DELETE,
-                                "/api/products/**",
-                                "/api/categories/**",
-                                "/api/units/**",
-                                "/api/addons/**",
-                                "/api/flavours/**"
+                                "/api/products/**", "/api/categories/**",
+                                "/api/units/**", "/api/addons/**", "/api/flavours/**"
                         ).hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPERADMIN")
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
