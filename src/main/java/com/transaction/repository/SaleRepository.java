@@ -5,9 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface SaleRepository extends JpaRepository<Sale, Long> {
     @Query("SELECT s FROM Sale s WHERE " +
@@ -23,5 +25,13 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
             @Param("flavourId") Long flavourId,
             @Param("parcel") Boolean parcel
     );
+    @Query("""
+    SELECT SUM(s.amount)
+    FROM Sale s
+    WHERE DATE(s.createdAt) = :date
+    AND s.order.paymentMethod.name = 'CASH'
+""")
+    Optional<BigDecimal> getTotalSalesByDateAndCash(@Param("date") LocalDate date);
+
 
 }
