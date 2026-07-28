@@ -26,10 +26,10 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
             @Param("parcel") Boolean parcel
     );
     @Query("""
-    SELECT SUM(s.amount)
-    FROM Sale s
-    WHERE DATE(s.createdAt) = :date
-    AND s.order.paymentMethod.name = 'CASH'
+    SELECT SUM(CASE WHEN s.salePrice IS NOT NULL AND s.salePrice > 0 THEN s.salePrice ELSE s.amount END)
+                                                           FROM Sale s
+                                                           WHERE DATE(s.createdAt) = :date
+                                                           AND s.order.paymentMethod.name = 'CASH'
 """)
     Optional<BigDecimal> getTotalSalesByDateAndCash(@Param("date") LocalDate date);
 

@@ -8,6 +8,9 @@ primary_region = 'bom'
 
 [build]
 
+[env]
+  JAVA_TOOL_OPTIONS = "-Duser.timezone=Asia/Kolkata"
+
 [http_service]
   internal_port = 8080
   force_https = true
