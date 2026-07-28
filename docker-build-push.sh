@@ -12,7 +12,7 @@ fi
 FULL_IMAGE="$IMAGE_NAME:$TAG"
 
 echo "Building $FULL_IMAGE ..."
-docker build -t "$FULL_IMAGE" .
+docker build -f Dockerfile -t "$FULL_IMAGE" .
 
 echo "Pushing $FULL_IMAGE ..."
 docker push "$FULL_IMAGE"

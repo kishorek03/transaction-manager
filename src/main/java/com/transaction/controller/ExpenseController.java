@@ -36,7 +36,7 @@ public class ExpenseController {
             @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
         try {
-            List<ExpenseDTO> expenses = expenseService.getAllExpenses(start,end);
+            List<ExpenseDTO> expenses = expenseService.getAllExpenses(start, end);
             return ResponseEntity.ok(
                     new ApiResponse<>("success", "Fetched all expenses", expenses, null)
             );
