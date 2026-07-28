@@ -1,5 +1,6 @@
 package com.transaction.controller;
 
+import com.transaction.config.DateTimeUtil;
 import com.transaction.dto.ApiResponse;
 import com.transaction.dto.SaleDTO;
 import com.transaction.dto.mapper.SaleMapper;
@@ -69,7 +70,7 @@ public class SaleController {
             @RequestParam(required = false) Long flavourId,
             @RequestParam(required = false) Boolean parcel
     ) {
-        List<SaleDTO> sales = salesService.filterSales(startDate, endDate, productId, flavourId, parcel)
+        List<SaleDTO> sales = salesService.filterSales(DateTimeUtil.utcToIst(startDate), DateTimeUtil.utcToIst(endDate), productId, flavourId, parcel)
                 .stream()
                 .map(saleMapper::toDto)
                 .toList();
