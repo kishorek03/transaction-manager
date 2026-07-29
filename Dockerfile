@@ -14,11 +14,6 @@ RUN ./mvnw clean package -DskipTests
 # Stage 2: Run the built JAR
 FROM eclipse-temurin:21-jdk
 
-# Set timezone to IST
-ENV JAVA_TOOL_OPTIONS="-Duser.timezone=Asia/Kolkata"
-ENV TZ=Asia/Kolkata
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
 WORKDIR /app
 
 # Copy the JAR from the builder stage

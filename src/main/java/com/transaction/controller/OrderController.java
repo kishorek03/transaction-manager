@@ -1,6 +1,5 @@
 package com.transaction.controller;
 
-import com.transaction.config.DateTimeUtil;
 import com.transaction.dto.ApiResponse;
 import com.transaction.dto.OrderDTO;
 import com.transaction.dto.OrderSummaryDTO;
@@ -50,7 +49,7 @@ public class OrderController {
             @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
 
-        List<OrderSummaryDTO> summaries = orderService.getOrderSummariesBetween(DateTimeUtil.utcToIst(start), DateTimeUtil.utcToIst(end));
+        List<OrderSummaryDTO> summaries = orderService.getOrderSummariesBetween(start, end);
         return ResponseEntity.ok(new ApiResponse<>("success", "Orders retrieved",summaries));
     }
 }

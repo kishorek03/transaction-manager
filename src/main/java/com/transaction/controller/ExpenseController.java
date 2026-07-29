@@ -3,7 +3,6 @@ package com.transaction.controller;
 import com.transaction.dto.ApiResponse;
 import com.transaction.dto.ExpenseDTO;
 import com.transaction.service.ExpenseService;
-import com.transaction.config.DateTimeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -37,7 +36,7 @@ public class ExpenseController {
             @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
         try {
-            List<ExpenseDTO> expenses = expenseService.getAllExpenses(DateTimeUtil.utcToIst(start), DateTimeUtil.utcToIst(end));
+            List<ExpenseDTO> expenses = expenseService.getAllExpenses(start, end);
             return ResponseEntity.ok(
                     new ApiResponse<>("success", "Fetched all expenses", expenses, null)
             );

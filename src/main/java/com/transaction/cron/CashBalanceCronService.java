@@ -38,9 +38,9 @@ public class CashBalanceCronService {
                 .map(DailyCashBalance::getAmount)
                 .orElse(BigDecimal.ZERO);
 
-        BigDecimal totalCashSales = saleRepository.getTotalSalesByDateAndCash(today).orElse(BigDecimal.ZERO);
-        BigDecimal totalCashExpenses = expenseRepository.getTotalExpensesByDateAndCash(today).orElse(BigDecimal.ZERO);
-        BigDecimal netCashMovements = cashMovementRepository.getNetCashMovementByDate(today).orElse(BigDecimal.ZERO);
+        BigDecimal totalCashSales = saleRepository.getTotalSalesByDateAndCash(yesterday).orElse(BigDecimal.ZERO);
+        BigDecimal totalCashExpenses = expenseRepository.getTotalExpensesByDateAndCash(yesterday).orElse(BigDecimal.ZERO);
+        BigDecimal netCashMovements = cashMovementRepository.getNetCashMovementByDate(yesterday).orElse(BigDecimal.ZERO);
 
         BigDecimal closingBalance = previousBalance
                 .add(totalCashSales)

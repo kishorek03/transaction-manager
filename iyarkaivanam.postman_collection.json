@@ -1,0 +1,531 @@
+{
+  "info": {
+    "name": "Iyarkaivanam Backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080/api" },
+    { "key": "token", "value": "" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"password\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/refresh",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"<refresh_token>\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/user",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"employee1\",\n  \"password\": \"password\",\n  \"mobileNumber\": \"9999999999\",\n  \"email\": \"employee@example.com\",\n  \"role\": \"ROLE_EMPLOYEE\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/products",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Sugarcane Juice\",\n  \"basePrice\": 30,\n  \"unitPrice\": 30,\n  \"unitId\": 1,\n  \"parcelPrice\": 5,\n  \"categoryId\": 1,\n  \"flavourIds\": [],\n  \"addOnIds\": []\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/products"
+          }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/products/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Sugarcane Juice\",\n  \"basePrice\": 35,\n  \"unitPrice\": 35,\n  \"unitId\": 1,\n  \"parcelPrice\": 5,\n  \"categoryId\": 1,\n  \"flavourIds\": [],\n  \"addOnIds\": []\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/products/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/categories",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"categoryName\": \"Beverages\",\n  \"categoryType\": \"SALES\",\n  \"isRecurring\": false,\n  \"description\": \"All beverages\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/categories"
+          }
+        },
+        {
+          "name": "Get Category By Id",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/categories/1"
+          }
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/categories/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"categoryName\": \"Beverages\",\n  \"categoryType\": \"SALES\",\n  \"isRecurring\": false,\n  \"description\": \"Updated description\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/categories/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flavours",
+      "item": [
+        {
+          "name": "Create Flavour",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/flavours",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Lemon\",\n  \"price\": 5\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Flavours",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/flavours"
+          }
+        },
+        {
+          "name": "Get Flavour By Id",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/flavours/1"
+          }
+        },
+        {
+          "name": "Update Flavour",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/flavours/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Lemon\",\n  \"price\": 10\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Flavour",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/flavours/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Add-Ons",
+      "item": [
+        {
+          "name": "Create AddOn",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/addons",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Extra Sugar\",\n  \"price\": 5\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All AddOns",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/addons"
+          }
+        },
+        {
+          "name": "Get AddOn By Id",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/addons/1"
+          }
+        },
+        {
+          "name": "Update AddOn",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/addons/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Extra Sugar\",\n  \"price\": 10\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete AddOn",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/addons/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Units",
+      "item": [
+        {
+          "name": "Create Unit",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/units",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Milliliter\",\n  \"abbreviation\": \"ml\",\n  \"conversionFactor\": 1.0,\n  \"baseUnit\": \"ml\",\n  \"unitType\": \"VOLUME\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Units",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/units"
+          }
+        },
+        {
+          "name": "Get Unit By Id",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/units/1"
+          }
+        },
+        {
+          "name": "Update Unit",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/units/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Milliliter\",\n  \"abbreviation\": \"ml\",\n  \"conversionFactor\": 1.0,\n  \"baseUnit\": \"ml\",\n  \"unitType\": \"VOLUME\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Unit",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/units/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payment Methods",
+      "item": [
+        {
+          "name": "Create Payment Method",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"CASH\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Payment Methods",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/payment-methods"
+          }
+        },
+        {
+          "name": "Update Payment Method",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/payment-methods/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"UPI\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Payment Method",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/payment-methods/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/orders",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": 1,\n  \"totalAmount\": 60,\n  \"sales\": [\n    {\n      \"productId\": 1,\n      \"flavourId\": null,\n      \"addOnId\": null,\n      \"quantity\": 2,\n      \"amount\": 60,\n      \"salePrice\": null,\n      \"parcel\": false\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Orders",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/orders"
+          }
+        },
+        {
+          "name": "Get Order By Id",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/orders/1"
+          }
+        },
+        {
+          "name": "Get Order Summary",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/orders/summary?start=2026-07-28T00:00:00.000Z&end=2026-07-28T23:59:59.999Z",
+              "query": [
+                { "key": "start", "value": "2026-07-28T00:00:00.000Z" },
+                { "key": "end", "value": "2026-07-28T23:59:59.999Z" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sales",
+      "item": [
+        {
+          "name": "Calculate Amount",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/sales/calculateAmount",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"flavourId\": null,\n  \"addOnId\": null,\n  \"quantity\": 2,\n  \"amount\": 0,\n  \"salePrice\": null,\n  \"parcel\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "Fetch Sales",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/sales/fetch?startDate=2026-07-28T00:00:00.000Z&endDate=2026-07-28T23:59:59.999Z",
+              "query": [
+                { "key": "startDate", "value": "2026-07-28T00:00:00.000Z" },
+                { "key": "endDate", "value": "2026-07-28T23:59:59.999Z" },
+                { "key": "productId", "value": "", "disabled": true },
+                { "key": "flavourId", "value": "", "disabled": true },
+                { "key": "parcel", "value": "", "disabled": true }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Expenses",
+      "item": [
+        {
+          "name": "Create Expense",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/expenses",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"item\": \"Sugar\",\n  \"quantity\": 5,\n  \"amount\": 200,\n  \"unitId\": 1,\n  \"categoryId\": 1,\n  \"paymentMethodId\": 1,\n  \"remarks\": \"Weekly purchase\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Expenses",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/expenses?start=2026-07-28T00:00:00.000Z&end=2026-07-28T23:59:59.999Z",
+              "query": [
+                { "key": "start", "value": "2026-07-28T00:00:00.000Z" },
+                { "key": "end", "value": "2026-07-28T23:59:59.999Z" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cash Movements",
+      "item": [
+        {
+          "name": "Create Cash Movement",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/cash-movements",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 500,\n  \"type\": \"IN\",\n  \"reason\": \"Cash deposit\",\n  \"userId\": \"admin\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Cash Movements",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/cash-movements"
+          }
+        },
+        {
+          "name": "Get Net Cash Movement",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cash-movements/net-movement?date=2026-07-28",
+              "query": [
+                { "key": "date", "value": "2026-07-28" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Daily Cash Balance",
+      "item": [
+        {
+          "name": "Create Opening Balance",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/daily-cash-balance",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"businessDate\": \"2026-07-28\",\n  \"amount\": 5000,\n  \"userId\": \"admin\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Today's Balance",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/daily-cash-balance/today"
+          }
+        },
+        {
+          "name": "Get Balance By Date",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/daily-cash-balance/2026-07-28"
+          }
+        }
+      ]
+    }
+  ]
+}
