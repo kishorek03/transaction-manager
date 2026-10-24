@@ -27,7 +27,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
-        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
@@ -51,7 +51,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,
                                 "/api/products/**", "/api/orders/**", "/api/items/**",
                                 "/api/expenses/**", "/api/categories/**", "/api/units/**",
-                                "/api/addons/**", "/api/flavours/**", "/api/payment-methods/**"
+                                "/api/addons/**", "/api/flavours/**", "/api/payment-methods/**",
+                                "/api/expense-items/**", "/api/reports/**"
                         ).hasAnyAuthority("ROLE_EMPLOYEE", "ROLE_ADMIN", "ROLE_SUPERADMIN")
 
                         .requestMatchers(HttpMethod.POST, "/api/orders/**")
@@ -60,24 +61,27 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,
                                 "/api/products/**", "/api/payment-methods/**",
                                 "/api/categories/**", "/api/units/**",
-                                "/api/addons/**", "/api/flavours/**"
+                                "/api/addons/**", "/api/flavours/**",
+                                "/api/expense-items/**"
                         ).hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPERADMIN")
 
                         .requestMatchers(HttpMethod.PUT,
                                 "/api/products/**", "/api/categories/**",
-                                "/api/units/**", "/api/addons/**", "/api/flavours/**"
+                                "/api/units/**", "/api/addons/**", "/api/flavours/**",
+                                "/api/expense-items/**"
                         ).hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPERADMIN")
 
                         .requestMatchers(HttpMethod.DELETE,
                                 "/api/products/**", "/api/categories/**",
-                                "/api/units/**", "/api/addons/**", "/api/flavours/**"
+                                "/api/units/**", "/api/addons/**", "/api/flavours/**",
+                                "/api/expense-items/**"
                         ).hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPERADMIN")
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors().configurationSource(corsConfigurationSource());
 
         return http.build();
-        }
+    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

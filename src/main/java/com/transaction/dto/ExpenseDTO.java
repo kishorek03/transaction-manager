@@ -15,5 +15,7 @@ public record ExpenseDTO(
         Long paymentMethodId,
         String paymentMethodName,
         String remarks,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        Long expenseItemId,
+        String expenseItemName
 ) {}

@@ -14,6 +14,10 @@ RUN ./mvnw clean package -DskipTests
 # Stage 2: Run the built JAR
 FROM eclipse-temurin:21-jdk
 
+# All timestamps are stored and queried as IST wall-clock time
+ENV TZ=Asia/Kolkata
+ENV JAVA_TOOL_OPTIONS="-Duser.timezone=Asia/Kolkata"
+
 WORKDIR /app
 
 # Copy the JAR from the builder stage

@@ -3,6 +3,7 @@ package com.transaction.service;
 import com.transaction.dto.DailyCashBalanceDTO;
 import com.transaction.dto.mapper.DailyCashBalanceMapper;
 import com.transaction.entity.DailyCashBalance;
+import com.transaction.exception.BadRequestException;
 import com.transaction.repository.DailyCashBalanceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public interface DailyCashBalanceService {
         @Override
         public DailyCashBalanceDTO createOpeningBalance(DailyCashBalanceDTO dto) {
             repository.findByBusinessDate(dto.businessDate()).ifPresent(existing -> {
-                throw new IllegalStateException("Opening balance for this date already exists");
+                throw new BadRequestException("Opening balance for this date already exists");
             });
 
             DailyCashBalance entity = mapper.toEntity(dto);

@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface SaleRepository extends JpaRepository<Sale, Long> {
     @Query("SELECT s FROM Sale s WHERE " +
             "(:startDate IS NULL OR s.createdAt >= :startDate) AND " +
-            "(:endDate IS NULL OR s.createdAt <= :endDate) AND " +
+            "(:endDate IS NULL OR s.createdAt < :endDate) AND " +
             "(:productId IS NULL OR s.product.id = :productId) AND " +
             "(:flavourId IS NULL OR s.flavour.id = :flavourId) AND " +
             "(:parcel IS NULL OR s.parcel = :parcel)")

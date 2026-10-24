@@ -3,12 +3,14 @@ package com.transaction.controller;
 import com.transaction.dto.ApiResponse;
 import com.transaction.dto.ExpenseDTO;
 import com.transaction.service.ExpenseService;
+import com.transaction.util.DateRange;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -33,10 +35,13 @@ public class ExpenseController {
     }
     @GetMapping
     public ResponseEntity<ApiResponse<List<ExpenseDTO>>> getAllExpenses(
-            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+        DateRange range = DateRange.resolve(from, to, start, end).requireBounds();
         try {
-            List<ExpenseDTO> expenses = expenseService.getAllExpenses(start, end);
+            List<ExpenseDTO> expenses = expenseService.getAllExpenses(range.start(), range.end());
             return ResponseEntity.ok(
                     new ApiResponse<>("success", "Fetched all expenses", expenses, null)
             );

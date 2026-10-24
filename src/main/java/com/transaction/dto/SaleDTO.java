@@ -25,5 +25,17 @@ public record SaleDTO(
 
         Long orderId,
 
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+
+        String productName,
+
+        Long unitId,
+
+        String unitName,
+
+        String unitAbbreviation,
+
+        String flavourName,
+
+        String addOnName
 ) {}

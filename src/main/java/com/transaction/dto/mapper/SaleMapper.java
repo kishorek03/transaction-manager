@@ -15,8 +15,14 @@ public interface SaleMapper {
     Sale toEntity(SaleDTO dto);
 
     @Mapping(source = "product.id", target = "productId")
+    @Mapping(source = "product.name", target = "productName")
+    @Mapping(source = "product.unit.id", target = "unitId")
+    @Mapping(source = "product.unit.name", target = "unitName")
+    @Mapping(source = "product.unit.abbreviation", target = "unitAbbreviation")
     @Mapping(source = "flavour.id", target = "flavourId")
+    @Mapping(source = "flavour.name", target = "flavourName")
     @Mapping(source = "addOn.id", target = "addOnId")
+    @Mapping(source = "addOn.name", target = "addOnName")
     @Mapping(source = "order.id", target = "orderId")
     @Mapping(source = "createdAt", target = "createdAt")
     SaleDTO toDto(Sale entity);
@@ -53,4 +59,3 @@ public interface SaleMapper {
         return order;
     }
 }
-

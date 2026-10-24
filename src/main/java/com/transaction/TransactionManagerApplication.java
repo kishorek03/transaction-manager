@@ -1,6 +1,5 @@
 package com.transaction;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -14,12 +13,10 @@ import java.util.TimeZone;
 
 public class TransactionManagerApplication {
 
-	@PostConstruct
-	public void init() {
-		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
-	}
-
 	public static void main(String[] args) {
+		// Must be set before Spring/Hibernate start: anything initialised earlier (e.g. Hibernate's
+		// @CreationTimestamp clock) otherwise keeps the container's UTC zone.
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
 		SpringApplication.run(TransactionManagerApplication.class, args);
 	}
 

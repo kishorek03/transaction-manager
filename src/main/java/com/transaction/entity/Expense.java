@@ -31,6 +31,10 @@ public class Expense extends BaseEntity {
     @JoinColumn(name = "payment_method_id", nullable = false)
     private PaymentMethod paymentMethod;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "expense_item_id")
+    private ExpenseItem expenseItem;
+
     private String remarks;
 
     public String getRemarks() {
@@ -95,5 +99,13 @@ public class Expense extends BaseEntity {
 
     public void setUnit(Unit unit) {
         this.unit = unit;
+    }
+
+    public ExpenseItem getExpenseItem() {
+        return expenseItem;
+    }
+
+    public void setExpenseItem(ExpenseItem expenseItem) {
+        this.expenseItem = expenseItem;
     }
 }

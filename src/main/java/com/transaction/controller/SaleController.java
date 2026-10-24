@@ -2,12 +2,14 @@ package com.transaction.controller;
 
 import com.transaction.dto.ApiResponse;
 import com.transaction.dto.SaleDTO;
+import com.transaction.dto.SalesSearchResponseDTO;
+import com.transaction.dto.SalesUnitSummaryDTO;
 import com.transaction.dto.mapper.SaleMapper;
 import com.transaction.entity.Sale;
 import com.transaction.service.SaleService;
+import com.transaction.util.DateRange;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,17 +38,17 @@ public class SaleController {
         return salesService.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:\\d+}")
     public Sale getById(@PathVariable Long id) {
         return salesService.findById(id);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id:\\d+}")
     public Sale update(@PathVariable Long id, @RequestBody Sale updatedSale) {
         return salesService.update(id, updatedSale);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id:\\d+}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         salesService.delete(id);
         return ResponseEntity.ok().build();
@@ -61,15 +63,19 @@ public class SaleController {
 
         return ResponseEntity.ok(new ApiResponse<>("success", "Amount calculated", amount));
     }
+
     @GetMapping("/fetch")
     public ResponseEntity<ApiResponse<List<SaleDTO>>> fetchSales(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
             @RequestParam(required = false) Long productId,
             @RequestParam(required = false) Long flavourId,
             @RequestParam(required = false) Boolean parcel
     ) {
-        List<SaleDTO> sales = salesService.filterSales(startDate, endDate, productId, flavourId, parcel)
+        DateRange range = DateRange.resolve(from, to, startDate, endDate);
+        List<SaleDTO> sales = salesService.filterSales(range.start(), range.end(), productId, flavourId, parcel)
                 .stream()
                 .map(saleMapper::toDto)
                 .toList();
@@ -78,5 +84,35 @@ public class SaleController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/quantity-by-unit")
+    public ResponseEntity<ApiResponse<SalesUnitSummaryDTO>> getSalesQuantityByUnit(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+            @RequestParam(required = false) Long productId,
+            @RequestParam(required = false) Long flavourId,
+            @RequestParam(required = false) Boolean parcel
+    ) {
+        DateRange range = DateRange.resolve(from, to, startDate, endDate);
+        List<Sale> sales = salesService.filterSales(range.start(), range.end(), productId, flavourId, parcel);
+        SalesUnitSummaryDTO summary = salesService.calculateUnitSummary(sales);
+        return ResponseEntity.ok(new ApiResponse<>("success", "Sales quantity summary calculated", summary));
+    }
 
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<SalesSearchResponseDTO>> searchSales(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+            @RequestParam(required = false) Long productId,
+            @RequestParam(required = false) Long flavourId,
+            @RequestParam(required = false) Boolean parcel
+    ) {
+        DateRange range = DateRange.resolve(from, to, startDate, endDate);
+        SalesSearchResponseDTO response = salesService.getSalesSearchWithSummary(
+                range.start(), range.end(), productId, flavourId, parcel);
+        return ResponseEntity.ok(new ApiResponse<>("success", "Sales search results", response));
+    }
 }
