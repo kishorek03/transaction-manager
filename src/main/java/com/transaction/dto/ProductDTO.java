@@ -1,8 +1,7 @@
 package com.transaction.dto;
 
-import com.transaction.entity.Category;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -34,5 +33,14 @@ public record ProductDTO(
         Long categoryId,
         // Optional lists, they can be null
         List<Long> flavourIds,
-        List<Long> addOnIds
-) {}
+        List<Long> addOnIds,
+
+        @JsonProperty("isActive")
+        @JsonAlias({"active", "status"})
+        Boolean isActive
+) {
+    @JsonProperty("active")
+    public Boolean getActive() {
+        return isActive;
+    }
+}

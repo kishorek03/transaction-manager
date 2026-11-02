@@ -36,6 +36,9 @@ public class Product extends BaseEntity {
 
     private BigDecimal parcelPrice;
 
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
+
     public Long getId() {
         return id;
     }
@@ -106,5 +109,21 @@ public class Product extends BaseEntity {
 
     public void setParcelPrice(BigDecimal parcelPrice) {
         this.parcelPrice = parcelPrice;
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        this.isActive = active;
     }
 }

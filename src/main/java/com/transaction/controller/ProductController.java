@@ -28,9 +28,11 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<ProductDTO>>> getAll() {
-        log.info("Fetching all products");
-        List<ProductDTO> productDTOs = productService.findAll();
+    public ResponseEntity<ApiResponse<List<ProductDTO>>> getAll(
+            @RequestParam(required = false) Boolean activeOnly,
+            @RequestParam(required = false) Boolean all) {
+        log.info("Fetching products (activeOnly={}, all={})", activeOnly, all);
+        List<ProductDTO> productDTOs = productService.findAll(activeOnly, all);
         return ResponseEntity.ok(new ApiResponse<>("success", "Products retrieved", productDTOs));
     }
 
