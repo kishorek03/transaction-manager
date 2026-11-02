@@ -11,8 +11,14 @@ fi
 
 FULL_IMAGE="$IMAGE_NAME:$TAG"
 
-echo "Building $FULL_IMAGE ..."
-docker build -f Dockerfile -t "$FULL_IMAGE" .
+# If JAR does not exist in target/, package it with Maven wrapper
+if [ ! -f "target/transaction-manager-0.0.1-SNAPSHOT.jar" ]; then
+  echo "JAR not found in target/. Packaging with Maven..."
+  ./mvnw clean package -DskipTests
+fi
+
+echo "Building $FULL_IMAGE using target/transaction-manager-0.0.1-SNAPSHOT.jar ..."
+docker build -f Dockerfile.local -t "$FULL_IMAGE" .
 
 echo "Pushing $FULL_IMAGE ..."
 docker push "$FULL_IMAGE"

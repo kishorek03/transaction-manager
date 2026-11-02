@@ -1,0 +1,12 @@
+FROM eclipse-temurin:21-jdk
+
+# All timestamps are stored and queried as IST wall-clock time
+ENV TZ=Asia/Kolkata
+ENV JAVA_TOOL_OPTIONS="-Duser.timezone=Asia/Kolkata"
+
+WORKDIR /app
+
+# Copy the pre-built JAR from target
+COPY target/transaction-manager-0.0.1-SNAPSHOT.jar app.jar
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
