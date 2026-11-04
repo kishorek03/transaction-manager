@@ -5,7 +5,6 @@ import com.transaction.dto.mapper.CategoryMapper;
 import com.transaction.entity.Category;
 import com.transaction.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

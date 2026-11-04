@@ -10,6 +10,9 @@ import com.transaction.service.SaleService;
 import com.transaction.util.DateRange;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -108,11 +111,17 @@ public class SaleController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
             @RequestParam(required = false) Long productId,
             @RequestParam(required = false) Long flavourId,
-            @RequestParam(required = false) Boolean parcel
+            @RequestParam(required = false) Boolean parcel,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size
     ) {
         DateRange range = DateRange.resolve(from, to, startDate, endDate);
+        Pageable pageable = (page != null && size != null)
+                ? PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"))
+                : Pageable.unpaged();
+
         SalesSearchResponseDTO response = salesService.getSalesSearchWithSummary(
-                range.start(), range.end(), productId, flavourId, parcel);
+                range.start(), range.end(), productId, flavourId, parcel, pageable);
         return ResponseEntity.ok(new ApiResponse<>("success", "Sales search results", response));
     }
 }

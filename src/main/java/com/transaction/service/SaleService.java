@@ -13,6 +13,8 @@ import com.transaction.repository.ProductRepository;
 import com.transaction.repository.SaleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -151,11 +153,37 @@ public class SaleService {
     }
 
     public SalesSearchResponseDTO getSalesSearchWithSummary(
+            LocalDateTime start, LocalDateTime end, Long productId, Long flavourId, Boolean parcel, Pageable pageable) {
+        if (pageable == null || pageable.isUnpaged()) {
+            List<Sale> sales = filterSales(start, end, productId, flavourId, parcel);
+            List<SaleDTO> saleDTOs = sales.stream().map(saleMapper::toDto).toList();
+            SalesUnitSummaryDTO summary = calculateUnitSummary(sales);
+            return new SalesSearchResponseDTO(saleDTOs, summary, 0, 1, (long) saleDTOs.size(), false);
+        }
+
+        Page<Sale> page = salesRepository.findByFilters(start, end, productId, flavourId, parcel, pageable);
+        List<SaleDTO> saleDTOs = page.getContent().stream().map(saleMapper::toDto).toList();
+
+        // Calculate summary across the full date range on the first page
+        SalesUnitSummaryDTO summary = null;
+        if (pageable.getPageNumber() == 0) {
+            List<Sale> allSales = salesRepository.findByFilters(start, end, productId, flavourId, parcel);
+            summary = calculateUnitSummary(allSales);
+        }
+
+        return new SalesSearchResponseDTO(
+                saleDTOs,
+                summary,
+                page.getNumber(),
+                page.getTotalPages(),
+                page.getTotalElements(),
+                page.hasNext()
+        );
+    }
+
+    public SalesSearchResponseDTO getSalesSearchWithSummary(
             LocalDateTime start, LocalDateTime end, Long productId, Long flavourId, Boolean parcel) {
-        List<Sale> sales = filterSales(start, end, productId, flavourId, parcel);
-        List<SaleDTO> saleDTOs = sales.stream().map(saleMapper::toDto).toList();
-        SalesUnitSummaryDTO summary = calculateUnitSummary(sales);
-        return new SalesSearchResponseDTO(saleDTOs, summary);
+        return getSalesSearchWithSummary(start, end, productId, flavourId, parcel, Pageable.unpaged());
     }
 
     private static class UnitQuantityAggregator {

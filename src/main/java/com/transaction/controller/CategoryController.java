@@ -2,11 +2,9 @@ package com.transaction.controller;
 
 import com.transaction.dto.ApiResponse;
 import com.transaction.dto.CategoryDTO;
-import com.transaction.entity.Category;
 import com.transaction.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -61,6 +61,50 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
     @Query(value = """
         SELECT 
+            DATE_FORMAT(e.created_at, :dateFormat) AS period,
+            COALESCE(SUM(CASE WHEN LOWER(COALESCE(u.name, '')) LIKE '%ton%' THEN e.quantity * 1000 ELSE e.quantity END), 0) AS total,
+            COUNT(e.id) AS count
+        FROM expense e
+        LEFT JOIN unit u ON e.unit_id = u.id
+        WHERE e.created_at >= :start AND e.created_at < :end
+        AND (LOWER(e.item) LIKE '%cane%' OR LOWER(e.item) LIKE '%karumbu%')
+        AND LOWER(e.item) NOT LIKE '%transport%'
+        AND LOWER(e.item) NOT LIKE '%cutting%'
+        AND LOWER(e.item) NOT LIKE '%coolie%'
+        AND LOWER(e.item) NOT LIKE '%wages%'
+        AND LOWER(e.item) NOT LIKE '%freight%'
+        AND LOWER(e.item) NOT LIKE '%sugar%'
+        GROUP BY DATE_FORMAT(e.created_at, :dateFormat)
+        ORDER BY period ASC
+    """, nativeQuery = true)
+    List<PeriodAggregateProjection> getSugarcaneKgExpensesByPeriod(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end,
+            @Param("dateFormat") String dateFormat
+    );
+
+    @Query(value = """
+        SELECT 
+            DATE_FORMAT(e.created_at, :dateFormat) AS period,
+            COALESCE(SUM(CASE WHEN LOWER(COALESCE(u.name, '')) LIKE '%ml%' THEN e.quantity / 1000.0 ELSE e.quantity END), 0) AS total,
+            COUNT(e.id) AS count
+        FROM expense e
+        LEFT JOIN unit u ON e.unit_id = u.id
+        WHERE e.created_at >= :start AND e.created_at < :end
+        AND (LOWER(e.item) LIKE '%milk%' OR LOWER(e.item) LIKE '%curd%' OR LOWER(e.item) LIKE '%paal%' OR LOWER(e.item) LIKE '%thayir%' OR LOWER(e.item) LIKE '%butter%')
+        AND LOWER(e.item) NOT LIKE '%tea%'
+        AND LOWER(e.item) NOT LIKE '%coffee%'
+        GROUP BY DATE_FORMAT(e.created_at, :dateFormat)
+        ORDER BY period ASC
+    """, nativeQuery = true)
+    List<PeriodAggregateProjection> getMilkLitresExpensesByPeriod(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end,
+            @Param("dateFormat") String dateFormat
+    );
+
+    @Query(value = """
+        SELECT 
             c.id AS categoryId,
             c.category_name AS categoryName,
             COALESCE(SUM(e.amount), 0) AS total

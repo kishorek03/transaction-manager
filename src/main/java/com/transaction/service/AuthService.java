@@ -4,7 +4,6 @@ import com.transaction.dto.AuthDto;
 import com.transaction.entity.RefreshToken;
 import com.transaction.entity.User;
 import com.transaction.exception.BadRequestException;
-import com.transaction.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,7 +19,6 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
-    private final UserRepository userRepository;
 
     public AuthDto login(String username, String password) {
         var authentication = authenticationManager.authenticate(

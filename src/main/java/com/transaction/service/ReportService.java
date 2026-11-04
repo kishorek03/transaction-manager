@@ -8,6 +8,7 @@ import com.transaction.dto.projection.PeriodAggregateProjection;
 import com.transaction.dto.projection.TotalsAggregateProjection;
 import com.transaction.repository.ExpenseRepository;
 import com.transaction.repository.OrderRepository;
+import com.transaction.repository.SaleRepository;
 import com.transaction.util.DateRange;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ public class ReportService {
 
     private final OrderRepository orderRepository;
     private final ExpenseRepository expenseRepository;
+    private final SaleRepository saleRepository;
 
     public PnLReportDTO getPnLReport(LocalDate from, LocalDate to, LocalDateTime start, LocalDateTime end, String groupBy) {
         // If neither from/to nor start/end provided, default to current year
@@ -69,6 +71,10 @@ public class ReportService {
         // Periods breakdown
         List<PeriodAggregateProjection> salesByPeriod = orderRepository.getSalesByPeriod(range.start(), range.end(), dateFormat);
         List<PeriodAggregateProjection> expensesByPeriod = expenseRepository.getExpensesByPeriod(range.start(), range.end(), dateFormat);
+        List<PeriodAggregateProjection> caneJuiceByPeriod = saleRepository.getSugarcaneJuiceSalesByPeriod(range.start(), range.end(), dateFormat);
+        List<PeriodAggregateProjection> buttermilkByPeriod = saleRepository.getButtermilkSalesByPeriod(range.start(), range.end(), dateFormat);
+        List<PeriodAggregateProjection> caneKgByPeriod = expenseRepository.getSugarcaneKgExpensesByPeriod(range.start(), range.end(), dateFormat);
+        List<PeriodAggregateProjection> milkLByPeriod = expenseRepository.getMilkLitresExpensesByPeriod(range.start(), range.end(), dateFormat);
 
         Map<String, PeriodAggregateProjection> salesMap = new HashMap<>();
         for (PeriodAggregateProjection p : salesByPeriod) {
@@ -78,6 +84,26 @@ public class ReportService {
         Map<String, PeriodAggregateProjection> expenseMap = new HashMap<>();
         for (PeriodAggregateProjection p : expensesByPeriod) {
             expenseMap.put(p.getPeriod(), p);
+        }
+
+        Map<String, Double> caneJuiceMap = new HashMap<>();
+        for (PeriodAggregateProjection p : caneJuiceByPeriod) {
+            caneJuiceMap.put(p.getPeriod(), p.getTotal() != null ? p.getTotal().doubleValue() : 0.0);
+        }
+
+        Map<String, Double> buttermilkMap = new HashMap<>();
+        for (PeriodAggregateProjection p : buttermilkByPeriod) {
+            buttermilkMap.put(p.getPeriod(), p.getTotal() != null ? p.getTotal().doubleValue() : 0.0);
+        }
+
+        Map<String, Double> caneKgMap = new HashMap<>();
+        for (PeriodAggregateProjection p : caneKgByPeriod) {
+            caneKgMap.put(p.getPeriod(), p.getTotal() != null ? p.getTotal().doubleValue() : 0.0);
+        }
+
+        Map<String, Double> milkLMap = new HashMap<>();
+        for (PeriodAggregateProjection p : milkLByPeriod) {
+            milkLMap.put(p.getPeriod(), p.getTotal() != null ? p.getTotal().doubleValue() : 0.0);
         }
 
         Set<String> allPeriods = new TreeSet<>();
@@ -98,7 +124,23 @@ public class ReportService {
             BigDecimal pnl = sAmt.subtract(eAmt);
             Double margin = calculateMargin(pnl, sAmt);
 
-            periodDTOs.add(new PnLPeriodDTO(p, sAmt, eAmt, pnl, margin, sCnt, eCnt));
+            Double caneKg = caneKgMap.getOrDefault(p, 0.0);
+            Double caneGlasses = caneJuiceMap.getOrDefault(p, 0.0);
+            Double caneAvg = (caneKg > 0 && caneGlasses > 0)
+                    ? Math.round((caneGlasses / caneKg) * 100.0) / 100.0
+                    : null;
+
+            Double milkL = milkLMap.getOrDefault(p, 0.0);
+            Double butterGlasses = buttermilkMap.getOrDefault(p, 0.0);
+            Double butterAvg = (milkL > 0 && butterGlasses > 0)
+                    ? Math.round((butterGlasses / milkL) * 100.0) / 100.0
+                    : null;
+
+            periodDTOs.add(new PnLPeriodDTO(
+                    p, sAmt, eAmt, pnl, margin, sCnt, eCnt,
+                    caneKg, caneGlasses, caneAvg,
+                    milkL, butterGlasses, butterAvg
+            ));
         }
 
         // Category Expense breakdown
