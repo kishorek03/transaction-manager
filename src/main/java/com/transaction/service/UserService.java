@@ -60,17 +60,19 @@ public class UserService {
                     if (Boolean.TRUE.equals(activeOnly) && u.getActive() != null && !u.getActive()) {
                         return false;
                     }
+                    // Prithvi is admin & shop owner - exclude from staff leave lists
+                    String username = u.getUsername() != null ? u.getUsername().trim().toLowerCase() : "";
+                    if (username.equals("prithvi") || username.equals("admin") || username.equals("owner")) {
+                        return false;
+                    }
                     if ("ALL".equalsIgnoreCase(role)) {
                         return true;
                     }
                     if (role != null && !role.isBlank()) {
                         return u.getRole() != null && u.getRole().name().equalsIgnoreCase(role);
                     }
-                    boolean hasEmployees = all.stream().anyMatch(user -> user.getRole() == Role.ROLE_EMPLOYEE);
-                    if (hasEmployees) {
-                        return u.getRole() == Role.ROLE_EMPLOYEE;
-                    }
-                    return u.getRole() != Role.ROLE_SUPERADMIN;
+                    // Return staff/employees only
+                    return u.getRole() == Role.ROLE_EMPLOYEE;
                 })
                 .map(userMapper::toDTO)
                 .toList();
