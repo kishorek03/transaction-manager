@@ -90,10 +90,16 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
             COUNT(e.id) AS count
         FROM expense e
         LEFT JOIN unit u ON e.unit_id = u.id
+        LEFT JOIN category c ON e.category_id = c.id
         WHERE e.created_at >= :start AND e.created_at < :end
-        AND (LOWER(e.item) LIKE '%milk%' OR LOWER(e.item) LIKE '%curd%' OR LOWER(e.item) LIKE '%paal%' OR LOWER(e.item) LIKE '%thayir%' OR LOWER(e.item) LIKE '%butter%')
-        AND LOWER(e.item) NOT LIKE '%tea%'
-        AND LOWER(e.item) NOT LIKE '%coffee%'
+        AND (
+            LOWER(COALESCE(c.category_name, '')) LIKE '%buttermilk stock%'
+            OR (
+                (LOWER(e.item) LIKE '%milk%' OR LOWER(e.item) LIKE '%curd%' OR LOWER(e.item) LIKE '%paal%' OR LOWER(e.item) LIKE '%thayir%' OR LOWER(e.item) LIKE '%butter%')
+                AND LOWER(e.item) NOT LIKE '%tea%'
+                AND LOWER(e.item) NOT LIKE '%coffee%'
+            )
+        )
         GROUP BY DATE_FORMAT(e.created_at, :dateFormat)
         ORDER BY period ASC
     """, nativeQuery = true)

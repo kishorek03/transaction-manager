@@ -28,6 +28,18 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private Role role;
 
+    @Column(name = "active", columnDefinition = "boolean default true")
+    @Builder.Default
+    private Boolean active = true;
+
+    public Boolean getActive() {
+        return active != null ? active : true;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
     public Long getId() {
         return id;
     }

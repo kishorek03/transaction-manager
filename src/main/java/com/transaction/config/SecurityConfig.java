@@ -75,6 +75,25 @@ public class SecurityConfig {
                                 "/api/units/**", "/api/addons/**", "/api/flavours/**",
                                 "/api/expense-items/**"
                         ).hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPERADMIN")
+
+                        // ✅ LEAVES & HOLIDAYS ENDPOINTS
+                        .requestMatchers(HttpMethod.GET, "/api/leaves/**", "/api/holidays/**")
+                        .hasAnyAuthority("ROLE_EMPLOYEE", "ROLE_ADMIN", "ROLE_SUPERADMIN")
+
+                        .requestMatchers(HttpMethod.POST, "/api/leaves/**")
+                        .hasAnyAuthority("ROLE_EMPLOYEE", "ROLE_ADMIN", "ROLE_SUPERADMIN")
+
+                        .requestMatchers(HttpMethod.DELETE, "/api/leaves/**")
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPERADMIN")
+
+                        .requestMatchers(HttpMethod.POST, "/api/holidays/**")
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPERADMIN")
+
+                        .requestMatchers(HttpMethod.PUT, "/api/holidays/**")
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPERADMIN")
+
+                        .requestMatchers(HttpMethod.DELETE, "/api/holidays/**")
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPERADMIN")
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors().configurationSource(corsConfigurationSource());

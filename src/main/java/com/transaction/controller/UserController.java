@@ -24,7 +24,6 @@ public class UserController {
     public ResponseEntity<ApiResponse<User>> createUser(@RequestBody UserDTO userDTO) {
         log.info("Received request to create user with username: {}", userDTO.username());
 
-        // Perform user creation logic
         User user = userService.createUser(userDTO);
         ApiResponse<User> response = new ApiResponse<>("success", "User created successfully", user);
 
@@ -33,9 +32,12 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<UserDTO>>> listEmployees() {
-        log.info("Fetching all users");
-        List<UserDTO> dtos = userService.findAllEmployees(); // inject this mapper via constructor
+    public ResponseEntity<ApiResponse<List<UserDTO>>> listEmployees(
+            @RequestParam(required = false) String role,
+            @RequestParam(required = false, defaultValue = "true") Boolean activeOnly
+    ) {
+        log.info("Fetching staff users (role={}, activeOnly={})", role, activeOnly);
+        List<UserDTO> dtos = userService.findAllUsers(role, activeOnly);
         return ResponseEntity.ok(new ApiResponse<>("success", "Users retrieved", dtos));
     }
 }

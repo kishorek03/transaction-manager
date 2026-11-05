@@ -43,14 +43,35 @@ public class UserService {
                 .role(userDto.role())
                 .mobileNumber(userDto.mobileNumber())
                 .email(userDto.email())
+                .active(userDto.active() != null ? userDto.active() : true)
                 .build();
 
         return repo.save(user);
     }
 
     public List<UserDTO> findAllEmployees() {
-        return repo.findAll().stream()
-                .filter(u -> u.getRole() == Role.ROLE_EMPLOYEE)
+        return findAllUsers(null, true);
+    }
+
+    public List<UserDTO> findAllUsers(String role, Boolean activeOnly) {
+        List<User> all = repo.findAll();
+        return all.stream()
+                .filter(u -> {
+                    if (Boolean.TRUE.equals(activeOnly) && u.getActive() != null && !u.getActive()) {
+                        return false;
+                    }
+                    if ("ALL".equalsIgnoreCase(role)) {
+                        return true;
+                    }
+                    if (role != null && !role.isBlank()) {
+                        return u.getRole() != null && u.getRole().name().equalsIgnoreCase(role);
+                    }
+                    boolean hasEmployees = all.stream().anyMatch(user -> user.getRole() == Role.ROLE_EMPLOYEE);
+                    if (hasEmployees) {
+                        return u.getRole() == Role.ROLE_EMPLOYEE;
+                    }
+                    return u.getRole() != Role.ROLE_SUPERADMIN;
+                })
                 .map(userMapper::toDTO)
                 .toList();
     }
