@@ -47,6 +47,17 @@ Guidelines for querying and executing schema modifications or data updates on th
 | **22** | Litre | லிட்டர் | L | VOLUME |
 | **26** | Miscellaneous | இதர | msc | COUNT / MISC |
 
+### High-Performance Indexes
+The following indexes are applied on both Production and QA databases to accelerate reports and prevent full table scans:
+- `orders(created_at)` (`idx_orders_created_at`)
+- `sale(created_at)` (`idx_sale_created_at`)
+- `expense(created_at)` (`idx_expense_created_at`)
+- `cash_movements(created_at)` (`idx_cash_movements_created_at`)
+- `refresh_token(token)` (`idx_refresh_token_token`)
+- `product(is_active)` (`idx_product_is_active`)
+- `shop_holidays(holiday_date)` (`idx_shop_holidays_date`)
+- `staff_leaves(leave_date)` (`idx_staff_leaves_date`)
+
 ### Expense Items & Stock Categories
 | Item Name | `expense_item_id` | Expected `unit_id` | Expected `category_id` |
 | :--- | :--- | :--- | :--- |
